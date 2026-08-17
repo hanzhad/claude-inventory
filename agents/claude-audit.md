@@ -116,9 +116,21 @@ finding about the next:
 The `--row` output repeats the name inside the fence. Leave it: word for word
 means word for word, and the fence is what keeps the numbers aligned.
 
-The spec line is `<python> <quick_validate> <skill folder>` for skills, word for
-word; no validator, "spec not checked: <reason>"; agents, "spec does not apply".
-For a file you did not write, the fourth part is "not analysed: installed from
+The spec line is `<python> <quick_validate> <skill folder>` for skills. Print its
+output word for word, but never on its own — it goes after a label naming what
+was checked:
+
+    spec check (frontmatter YAML and key names only): Skill is valid!
+
+Bare, `Skill is valid!` reads as a verdict on the skill. It is not one: it means
+the frontmatter parses and every key is on the published list, and it says
+nothing about the body. The opposite needs the label just as much — a key
+reported as unexpected can still load here, because Claude Code reads keys the
+publishing spec does not list, so a rejection is not proof of a broken file
+either.
+
+No validator: "spec not checked: <reason>". Agents: "spec does not apply". For a
+file you did not write, the fourth part is "not analysed: installed from
 elsewhere; ask and I will run it on this one" and nothing else.
 
 Do not summarise or merge. A report in the wrong shape goes back to the
