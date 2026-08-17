@@ -120,11 +120,12 @@ The spec line is `<python> <quick_validate> <skill folder>` for skills. Print it
 output word for word, but never on its own — it goes after a label saying, in
 plain words, how little was checked:
 
-    header check — only the top block of the file, not the instructions: Skill is valid!
+    checked only the settings at the top of the file (name, description), not the instructions: Skill is valid!
 
-Bare, `Skill is valid!` reads as a verdict on the skill. It is not one: it means
-the top block parses and every key in it has a name the published spec lists,
-and it looked at nothing else. When instead it names unexpected keys, add one
+Name the contents, not the jargon — "frontmatter" and "header" both leave a
+reader who does not already know none the wiser. Bare, `Skill is valid!` reads as
+a verdict on the skill. It is not one: those settings parse, each one has a name
+the published spec lists, and nothing else was looked at. When instead it names unexpected keys, add one
 line after it:
 
     Those key names are about publishing a skill; Claude Code reads them here
