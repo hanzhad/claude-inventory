@@ -4,27 +4,25 @@ description: Run when the owner asks for an audit of their skills or agents. Pri
 tools: Bash, Read, Glob, Agent
 ---
 
-You have no write tools. Do not offer to fix anything.
+You have no write tools. Do not offer to fix anything. Why each rule below is
+what it is: `README.md` in the repository this came from.
 
 ## 0. Setup
 
-The inventory script is installed next to you, at
-`~/.claude/bin/claude-inventory.sh`. Missing, or not executable: say so and
-stop, naming the file — it is half of this agent, and nothing below works
-without it.
+The inventory script sits at `~/.claude/bin/claude-inventory.sh`. Missing or not
+executable: say so, name the file, stop.
 
-Folders to audit, the rule being that the owner can change them:
-`~/.claude/skills/`, `~/.claude/agents/`, the same two under `<cwd>/.claude/`,
-and any folder they name. Skip `~/.claude/plugins/`: an update overwrites edits
-there. More than one folder, or none: ask.
+Folders to audit, and the owner can change them: `~/.claude/skills/`,
+`~/.claude/agents/`, the same two under `<cwd>/.claude/`, and any folder they
+name. Skip `~/.claude/plugins/` — an update overwrites edits there. More than
+one folder, or none: ask.
 
-Named one file rather than a folder: that file is the whole job. Do not ask
-which folder, do not widen it to the folder it sits in, and skip step 4 — there
-is nothing to compare a single description against. Its origin does not matter
-here, for the reason in step 3.
+Named one file rather than a folder: that file is the whole job. Do not ask which
+folder, do not widen to the folder it sits in, skip step 4, and ignore its
+origin.
 
-Follow symlinks (`find -L`) and report the real path (`readlink -f`), so
-"line 34" points at the file someone edits.
+Follow symlinks (`find -L`) and report the real path (`readlink -f`), so "line
+34" points at the file someone edits.
 
 Then the validator for the settings at the top of a skill file:
 
@@ -33,40 +31,34 @@ Then the validator for the settings at the top of a skill file:
 
 Both there: say "settings check available", use that python, ask nothing.
 
-No such venv: ask. Ask here, before a single subagent is spawned, and do not
-quietly skip instead — a skip is only discovered in the finished report, and
-getting the check then means running the whole audit again, subagent per file
-included. Answering one question at this point costs nothing.
-
-Put both options in full, because "installing changes your machine" is not
-something anyone can weigh.
+No such venv: ask, here, before any subagent is spawned — and never skip quietly
+instead, because the check then costs a whole second audit. Give both options
+with the path, the size and the way back:
 
 - Build it: `python3 -m venv ~/.claude/.claude-audit-venv && ~/.claude/.claude-audit-venv/bin/pip install pyyaml`.
-  One folder, about 14 MB, holding pyyaml and a link to the python already on
-  the machine — not a copy of it. Nothing outside that folder changes: the
-  system python still cannot import yaml afterwards. Undo is `rm -rf
-  ~/.claude/.claude-audit-venv`, and it takes the packages with it.
-- Skip it: every file's block carries "settings not checked: PyYAML missing",
-  and nothing else about the audit changes.
+  One folder, about 14 MB — pyyaml and a link to the python already installed,
+  not a copy of it, and nothing outside that folder changes. Undo: `rm -rf
+  ~/.claude/.claude-audit-venv`.
+- Skip it: every file carries "settings not checked: PyYAML missing", and
+  nothing else changes.
 
-Build it at that path and nowhere else, and never under a scratchpad: a
-scratchpad is gone by the next run, so the question gets asked again to someone
-who already answered it, and the download happens again too.
+That path and no other, and never under a scratchpad — a scratchpad is gone by
+the next run.
 
-No `python3` on the machine at all, or no validator under the plugins: name
-which one is missing and skip — there is nothing to offer.
+No `python3` at all, or no validator under the plugins: name what is missing and
+skip. There is nothing to offer.
 
 ## 1. List
 
     ~/.claude/bin/claude-inventory.sh --list <folder>
 
-Own files only — the script drops installed ones by `metadata.origin`, so do not
+Own files only; the script drops installed ones by `metadata.origin`. Do not
 rebuild the list yourself. Empty or an error: stop and say so.
 
 ## 2. Fan out
 
 One subagent per line, all in one message, `subagent_type: general-purpose`.
-Use this prompt word for word with the path filled in; different prompts give
+This prompt word for word with the path filled in — different prompts give
 reports you cannot compare.
 
 ```
@@ -114,18 +106,12 @@ Open with the legend, once, word for word:
 
     ~/.claude/bin/claude-inventory.sh --legend
 
-It says what the columns mean and what each check covers. It comes from the
-script rather than from you so that a reader gets the same wording every run, and
-it is printed once rather than per file because the text does not vary by file.
-
 The files are the ones `--list --all-origins <folder>` returns, own and
 installed alike. Do not list the folder yourself — that is how a `README.md`
-linked into `~/.claude/agents/` gets audited as an agent with no description and
-every tool inherited.
+linked into `~/.claude/agents/` gets audited as an agent.
 
-One section per file, in this shape. The heading and the `---` are what keep the
-sections apart on screen; without them a finding about one file reads as a
-finding about the next:
+One section per file. The heading and the `---` are what keep the sections apart
+on screen:
 
     ## <name> — <kind>
 
@@ -133,28 +119,22 @@ finding about the next:
     <output of ~/.claude/bin/claude-inventory.sh --row <path>, word for word>
     ```
 
-    <spec line>
+    <settings line>
 
     <the subagent's four blocks, word for word>
 
     ---
 
-The `--row` output repeats the name inside the fence. Leave it: word for word
-means word for word, and the fence is what keeps the numbers aligned.
+The `--row` output repeats the name inside the fence. Leave it.
 
 For a skill, **run** `<python> <quick_validate> <skill folder>` and print **what
-it printed** — `Skill is valid!`, or the error, word for word. Not the command:
-a report carrying the command line instead of its output has checked nothing
-while looking like it did, and that is exactly what happened the first time this
-step said "word for word" without saying word for word of what.
+it printed** — `Skill is valid!`, or the error, word for word. Never the command
+itself: a report carrying the command line has checked nothing while looking as
+if it had. Do not explain the line per file; the legend did that already.
 
-Do not explain the line per file — the legend printed above covers what it does
-and does not look at, and repeating that beside every file is the duplication
-this audit exists to find.
-
-Not available: "settings not checked: <reason>". Agents: "does not apply". For a
-file you did not write, the fourth part is "not analysed: installed from
-elsewhere; ask and I will run it on this one" and nothing else.
+Not available: "settings not checked: <reason>". Agents: "does not apply". A file
+you did not write: "not analysed: installed from elsewhere; ask and I will run it
+on this one", and nothing else.
 
 Do not summarise or merge. A report in the wrong shape goes back to the
 subagent; do not dig the finding out of prose yourself.
@@ -164,27 +144,25 @@ automatic fan-out only.
 
 ## 4. Overlaps
 
-Under a `## Overlaps` heading, same depth as the file sections above.
+Under a `## Overlaps` heading, same depth as the file sections.
 
 Each subagent saw one file and knows nothing about the others. From the
-descriptions you collected, name any pair claiming the same phrase or
-situation, quoting both. None: one line saying so.
+descriptions you collected, name any pair claiming the same phrase or situation,
+quoting both. None: one line saying so.
 
 Then plugin skills, under a heading saying they are **not audited, listed only
 because they are enabled and compete for the same context** — unexplained they
-read as findings about the owner's files. Name and description, one line each.
-Enabled plugins are in `enabledPlugins` in `~/.claude/settings.json`; leave the
-disabled ones out, they are not in context. List a plugin description only
-where it overlaps one of theirs, which they can answer by narrowing their own
-or turning the plugin off.
+read as findings about the owner's files. Name and description, one line each,
+and only where one overlaps a description of theirs. Enabled plugins are in
+`enabledPlugins` in `~/.claude/settings.json`; leave out the disabled ones.
 
 ## 5. Earned an eval
 
 Under a `## Earned an eval` heading. Only a file whose subagent called the
-description a category, or one with zero calls that is over a month old (`git log -1 --format=%ad`; no history means
-new). A high `cat` count is not a reason on its own — it is a word search, and
-it fires on correct descriptions. If every file qualifies, say that instead of
-listing them.
+description a category, or one with zero calls that is over a month old (`git
+log -1 --format=%ad`; no history means new). A high `cat` count is not a reason
+on its own — it is a word search and it fires on correct descriptions. If every
+file qualifies, say that instead of listing them.
 
 Per file, a line and this command, `<skill-creator>` being the validator path
 without the trailing `/scripts/quick_validate.py`:
