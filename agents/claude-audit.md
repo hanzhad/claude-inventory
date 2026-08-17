@@ -26,17 +26,30 @@ here, for the reason in step 3.
 Follow symlinks (`find -L`) and report the real path (`readlink -f`), so
 "line 34" points at the file someone edits.
 
-Then the spec validator:
+Then the validator for the settings at the top of a skill file:
 
-    command -v python3
-    python3 -c 'import yaml' 2>/dev/null && echo yaml-ok
+    ~/.claude/.claude-audit-venv/bin/python -c 'import yaml' 2>/dev/null && echo yaml-ok
     find ~/.claude/plugins -name quick_validate.py -path '*skill-creator*' | head -1
 
-All three there: say "spec check available" and move on. Something missing:
-stop and ask, naming what will go unchecked. Either install it (`python3 -m venv
-<scratchpad>/venv && <scratchpad>/venv/bin/pip install pyyaml`, then use that
-python) or skip it (every block carries "spec not checked: <reason>"). Do
-neither before they answer: installing changes their machine.
+Both there: say "settings check available", use that python, ask nothing.
+
+No such venv: ask, and put both options in full, because "installing changes
+your machine" is not something anyone can weigh.
+
+- Build it: `python3 -m venv ~/.claude/.claude-audit-venv && ~/.claude/.claude-audit-venv/bin/pip install pyyaml`.
+  One folder, about 14 MB, holding pyyaml and a link to the python already on
+  the machine — not a copy of it. Nothing outside that folder changes: the
+  system python still cannot import yaml afterwards. Undo is `rm -rf
+  ~/.claude/.claude-audit-venv`, and it takes the packages with it.
+- Skip it: every file's block carries "settings not checked: PyYAML missing",
+  and nothing else about the audit changes.
+
+Build it at that path and nowhere else, and never under a scratchpad: a
+scratchpad is gone by the next run, so the question gets asked again to someone
+who already answered it, and the download happens again too.
+
+No `python3` on the machine at all, or no validator under the plugins: name
+which one is missing and skip — there is nothing to offer.
 
 ## 1. List
 
@@ -129,7 +142,7 @@ for word and on its own. Do not explain it per file — the legend printed above
 covers what it does and does not look at, and repeating that beside every file is
 the duplication this audit exists to find.
 
-No validator: "spec not checked: <reason>". Agents: "spec does not apply". For a
+Not available: "settings not checked: <reason>". Agents: "does not apply". For a
 file you did not write, the fourth part is "not analysed: installed from
 elsewhere; ask and I will run it on this one" and nothing else.
 
