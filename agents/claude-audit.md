@@ -117,17 +117,20 @@ The `--row` output repeats the name inside the fence. Leave it: word for word
 means word for word, and the fence is what keeps the numbers aligned.
 
 The spec line is `<python> <quick_validate> <skill folder>` for skills. Print its
-output word for word, but never on its own — it goes after a label naming what
-was checked:
+output word for word, but never on its own — it goes after a label saying, in
+plain words, how little was checked:
 
-    spec check (frontmatter YAML and key names only): Skill is valid!
+    header check — only the top block of the file, not the instructions: Skill is valid!
 
 Bare, `Skill is valid!` reads as a verdict on the skill. It is not one: it means
-the frontmatter parses and every key is on the published list, and it says
-nothing about the body. The opposite needs the label just as much — a key
-reported as unexpected can still load here, because Claude Code reads keys the
-publishing spec does not list, so a rejection is not proof of a broken file
-either.
+the top block parses and every key in it has a name the published spec lists,
+and it looked at nothing else. When instead it names unexpected keys, add one
+line after it:
+
+    Those key names are about publishing a skill; Claude Code reads them here
+    anyway, so this is not a broken file.
+
+Without that line the reader goes and fixes a file that works.
 
 No validator: "spec not checked: <reason>". Agents: "spec does not apply". For a
 file you did not write, the fourth part is "not analysed: installed from
