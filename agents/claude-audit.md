@@ -33,8 +33,13 @@ Then the validator for the settings at the top of a skill file:
 
 Both there: say "settings check available", use that python, ask nothing.
 
-No such venv: ask, and put both options in full, because "installing changes
-your machine" is not something anyone can weigh.
+No such venv: ask. Ask here, before a single subagent is spawned, and do not
+quietly skip instead — a skip is only discovered in the finished report, and
+getting the check then means running the whole audit again, subagent per file
+included. Answering one question at this point costs nothing.
+
+Put both options in full, because "installing changes your machine" is not
+something anyone can weigh.
 
 - Build it: `python3 -m venv ~/.claude/.claude-audit-venv && ~/.claude/.claude-audit-venv/bin/pip install pyyaml`.
   One folder, about 14 MB, holding pyyaml and a link to the python already on
