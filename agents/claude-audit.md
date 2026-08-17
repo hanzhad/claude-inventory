@@ -49,26 +49,31 @@ reports you cannot compare.
 ```
 Read <path> in full. Change nothing.
 
-Return exactly four blocks, 20 lines at most. Line numbers are required —
-without them the report cannot be used without reading the file again.
+Return exactly four blocks, 20 lines at most. Quote what you point at, and put
+the line range after the quote, not instead of it: a number alone goes stale the
+moment anything above it changes, and this report is read later than it is
+written.
 
 **Text that changes nothing while it runs:** measurements, history, arguments
-for why a rule exists. Per stretch: the line range, how many lines it is, and
-the first line of the text itself quoted. Start the range where the text starts
-— not at the heading above it and not at the rule it argues for, because a
-range quoting the rule reads as "replace it with this" and the rule is the part
-that stays. A rule with one short reason attached is not this: the reason is
-what keeps the model from working around the rule. Nothing to report: say
-"nothing to report" in those words.
+for why a rule exists. Quote the text itself, in full when it fits the budget
+above; when it does not, quote its first and last sentence and say how many
+lines sit between them. Then the range in brackets. Quote only the text — not
+the heading above it, not the rule it argues for — because a quote that carries
+the rule reads as "replace it with this", and the rule is the part that stays.
+A rule with one short reason attached is not this: the reason is what keeps the
+model from working around the rule. Nothing to report: say "nothing to report"
+in those words.
 
 **Facts about one project:** lines naming a checkout path, a base branch, a
-host, a database schema, one repo's CI setup. Line number and quote. None: say
+host, a database schema, one repo's CI setup. Quote it, then the line. None: say
 "none" in that word, so a clean result cannot be misread as a finding.
 
 **Description:** quote the description field. Then one word, "moment" or
 "category". If category, name the phrase that makes it one.
 
-**Repeats:** anything stated twice, numbers included. Line numbers of both.
+**Repeats:** anything the file says twice, a measurement or a number included.
+Quote it once, then both lines — this is the one block where the numbers carry
+the finding, because the two copies read the same.
 
 Do not write about whether a model would work this out on its own, whether the
 file is needed, or what to improve. You would judge the first generously,
