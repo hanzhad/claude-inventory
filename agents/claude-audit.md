@@ -60,14 +60,19 @@ moment anything above it changes, and this report is read later than it is
 written.
 
 **Text that changes nothing while it runs:** measurements, history, arguments
-for why a rule exists. Quote the text itself, in full when it fits the budget
-above; when it does not, quote its first and last sentence and say how many
-lines sit between them. Then the range in brackets. Quote only the text — not
-the heading above it, not the rule it argues for — because a quote that carries
-the rule reads as "replace it with this", and the rule is the part that stays.
-A rule with one short reason attached is not this: the reason is what keeps the
-model from working around the rule. Nothing to report: say "nothing to report"
-in those words.
+for why a rule exists. One bullet per stretch, in this shape, and the quote
+comes first — a bullet that opens with a number is the wrong shape, send it
+again:
+
+    - "<the text>" — N lines [49-51]
+
+Quote it in full when it fits the budget above; when it does not, quote the
+first and last sentence and say how many lines sit between them. Quote only the
+text — not the heading above it, not the rule it argues for — because a quote
+carrying the rule reads as "replace it with this", and the rule is the part that
+stays. A rule with one short reason attached is not this: the reason is what
+keeps the model from working around the rule. Nothing to report: the words
+"nothing to report", alone.
 
 **Facts about one project:** lines naming a checkout path, a base branch, a
 host, a database schema, one repo's CI setup. Quote it, then the line. None: say
@@ -87,13 +92,34 @@ because you are judging yourself. The other two are the owner's call.
 
 ## 3. Output
 
-One block per file in the folder, own and installed alike:
+The files are the ones `--list --all-origins <folder>` returns, own and
+installed alike. Do not list the folder yourself — that is how a `README.md`
+linked into `~/.claude/agents/` gets audited as an agent with no description and
+every tool inherited.
 
-1. `~/.claude/bin/claude-inventory.sh --row <path>` — word for word.
-2. Skills: `<python> <quick_validate> <skill folder>`, word for word. No
-   validator: "spec not checked: <reason>". Agents: "spec does not apply".
-3. Own file: the subagent's report, word for word. Installed: "not analysed:
-   installed from elsewhere; ask and I will run it on this one".
+One section per file, in this shape. The heading and the `---` are what keep the
+sections apart on screen; without them a finding about one file reads as a
+finding about the next:
+
+    ## <name> — <kind>
+
+    ```
+    <output of ~/.claude/bin/claude-inventory.sh --row <path>, word for word>
+    ```
+
+    <spec line>
+
+    <the subagent's four blocks, word for word>
+
+    ---
+
+The `--row` output repeats the name inside the fence. Leave it: word for word
+means word for word, and the fence is what keeps the numbers aligned.
+
+The spec line is `<python> <quick_validate> <skill folder>` for skills, word for
+word; no validator, "spec not checked: <reason>"; agents, "spec does not apply".
+For a file you did not write, the fourth part is "not analysed: installed from
+elsewhere; ask and I will run it on this one" and nothing else.
 
 Do not summarise or merge. A report in the wrong shape goes back to the
 subagent; do not dig the finding out of prose yourself.
@@ -102,6 +128,8 @@ Asked for one specific file: run it whatever its origin. The limit is on the
 automatic fan-out only.
 
 ## 4. Overlaps
+
+Under a `## Overlaps` heading, same depth as the file sections above.
 
 Each subagent saw one file and knows nothing about the others. From the
 descriptions you collected, name any pair claiming the same phrase or
@@ -117,8 +145,8 @@ or turning the plugin off.
 
 ## 5. Earned an eval
 
-Only a file whose subagent called the description a category, or one with zero
-calls that is over a month old (`git log -1 --format=%ad`; no history means
+Under a `## Earned an eval` heading. Only a file whose subagent called the
+description a category, or one with zero calls that is over a month old (`git log -1 --format=%ad`; no history means
 new). A high `cat` count is not a reason on its own — it is a word search, and
 it fires on correct descriptions. If every file qualifies, say that instead of
 listing them.
