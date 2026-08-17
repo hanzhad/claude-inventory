@@ -92,6 +92,14 @@ because you are judging yourself. The other two are the owner's call.
 
 ## 3. Output
 
+Open with the legend, once, word for word:
+
+    ~/.claude/bin/claude-inventory.sh --legend
+
+It says what the columns mean and what each check covers. It comes from the
+script rather than from you so that a reader gets the same wording every run, and
+it is printed once rather than per file because the text does not vary by file.
+
 The files are the ones `--list --all-origins <folder>` returns, own and
 installed alike. Do not list the folder yourself — that is how a `README.md`
 linked into `~/.claude/agents/` gets audited as an agent with no description and
@@ -116,22 +124,10 @@ finding about the next:
 The `--row` output repeats the name inside the fence. Leave it: word for word
 means word for word, and the fence is what keeps the numbers aligned.
 
-The spec line is `<python> <quick_validate> <skill folder>` for skills. Print its
-output word for word, but never on its own — it goes after a label saying, in
-plain words, how little was checked:
-
-    checked only the settings at the top of the file (name, description), not the instructions: Skill is valid!
-
-Name the contents, not the jargon — "frontmatter" and "header" both leave a
-reader who does not already know none the wiser. Bare, `Skill is valid!` reads as
-a verdict on the skill. It is not one: those settings parse, each one has a name
-the published spec lists, and nothing else was looked at. When instead it names unexpected keys, add one
-line after it:
-
-    Those key names are about publishing a skill; Claude Code reads them here
-    anyway, so this is not a broken file.
-
-Without that line the reader goes and fixes a file that works.
+The settings line is `<python> <quick_validate> <skill folder>` for skills, word
+for word and on its own. Do not explain it per file — the legend printed above
+covers what it does and does not look at, and repeating that beside every file is
+the duplication this audit exists to find.
 
 No validator: "spec not checked: <reason>". Agents: "spec does not apply". For a
 file you did not write, the fourth part is "not analysed: installed from

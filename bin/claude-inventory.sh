@@ -19,6 +19,12 @@
 #   --list DIR            one path per line — only the ones the owner authored
 #   --list --all-origins DIR   every path, for the description-collision pass
 #   --row PATH            the block for one artefact
+#   --legend              what the columns mean and what each check affects
+#
+# `--legend` lives here rather than in the agent that prints it because the text
+# is the same for every file in a report: printed per file it is duplication the
+# audit itself would flag, and kept in a prompt it would be reworded slightly on
+# every pass.
 #
 # Kind is detected from the layout: a directory of `<name>/SKILL.md` is skills,
 # a directory of flat `*.md` is agents. `--kind skill|agent` overrides it.
@@ -242,6 +248,40 @@ done
 set -- $(printf '%s' "$args" | sed '/^$/d')
 
 case "${1:-}" in
+  --legend)
+    cat <<'EOF'
+**What this report is.** A look at the skills and agents installed on this
+machine. Nothing here is a verdict: no file is called good or bad, nothing is
+ranked, and nothing is changed.
+
+**The numbers, per file.**
+
+- `prose` — lines of text you could shorten. The settings at the top, code
+  blocks and indented commands are not counted.
+- `desc` — length of the description. It sits in every session whether the file
+  is ever used or not, so it is the one cost that never goes away.
+- `cat` — how many broad words the description uses (any, always, whenever).
+  Broad words are what make a file fire when you did not ask for it.
+- `wtu` — whether a skill lists the phrases you actually type.
+- `tools` — what an agent may use. Nothing listed means everything, writing
+  included.
+- `calls` — times it was used across a month of your transcripts. Zero, while
+  installed, is the loudest thing in this report.
+
+**The settings check, skills only.** The few lines at the top of the file are
+parsed, and their names compared against Anthropic's published list. It never
+looks at the instructions below them, so "valid" is not praise for the file. A
+name that is not on the list still works here — it only stops the file from
+being packaged for publishing. A parse error is different and worth fixing: the
+file loads anyway, which means the value may be read differently than you meant
+it.
+
+**The reading, per file.** One subagent reads one file and reports text that
+changes nothing while the file runs, facts belonging to one project, whether the
+description names a moment or a whole kind of work, and anything said twice.
+"Nothing to report" is the normal answer, not a failure to look.
+EOF
+    ;;
   --row)
     target="${2:?--row needs a path}"
     case "$target" in
