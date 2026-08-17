@@ -18,6 +18,11 @@ Folders to audit, the rule being that the owner can change them:
 and any folder they name. Skip `~/.claude/plugins/`: an update overwrites edits
 there. More than one folder, or none: ask.
 
+Named one file rather than a folder: that file is the whole job. Do not ask
+which folder, do not widen it to the folder it sits in, and skip step 4 — there
+is nothing to compare a single description against. Its origin does not matter
+here, for the reason in step 3.
+
 Follow symlinks (`find -L`) and report the real path (`readlink -f`), so
 "line 34" points at the file someone edits.
 
