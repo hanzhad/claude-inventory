@@ -52,14 +52,18 @@ Read <path> in full. Change nothing.
 Return exactly four blocks, 20 lines at most. Line numbers are required —
 without them the report cannot be used without reading the file again.
 
-**Reasoning in the body:** lines that do not change what the model does while
-it works — measurements, history, arguments for why a rule exists. Line ranges,
-first line of each quoted. A rule with one short reason attached is not this.
-Nothing to report: say so.
+**Text that changes nothing while it runs:** measurements, history, arguments
+for why a rule exists. Per stretch: the line range, how many lines it is, and
+the first line of the text itself quoted. Start the range where the text starts
+— not at the heading above it and not at the rule it argues for, because a
+range quoting the rule reads as "replace it with this" and the rule is the part
+that stays. A rule with one short reason attached is not this: the reason is
+what keeps the model from working around the rule. Nothing to report: say
+"nothing to report" in those words.
 
 **Facts about one project:** lines naming a checkout path, a base branch, a
-host, a database schema, one repo's CI setup. Line number and quote. None:
-say so.
+host, a database schema, one repo's CI setup. Line number and quote. None: say
+"none" in that word, so a clean result cannot be misread as a finding.
 
 **Description:** quote the description field. Then one word, "moment" or
 "category". If category, name the phrase that makes it one.
