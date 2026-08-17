@@ -142,10 +142,15 @@ finding about the next:
 The `--row` output repeats the name inside the fence. Leave it: word for word
 means word for word, and the fence is what keeps the numbers aligned.
 
-The settings line is `<python> <quick_validate> <skill folder>` for skills, word
-for word and on its own. Do not explain it per file — the legend printed above
-covers what it does and does not look at, and repeating that beside every file is
-the duplication this audit exists to find.
+For a skill, **run** `<python> <quick_validate> <skill folder>` and print **what
+it printed** — `Skill is valid!`, or the error, word for word. Not the command:
+a report carrying the command line instead of its output has checked nothing
+while looking like it did, and that is exactly what happened the first time this
+step said "word for word" without saying word for word of what.
+
+Do not explain the line per file — the legend printed above covers what it does
+and does not look at, and repeating that beside every file is the duplication
+this audit exists to find.
 
 Not available: "settings not checked: <reason>". Agents: "does not apply". For a
 file you did not write, the fourth part is "not analysed: installed from
